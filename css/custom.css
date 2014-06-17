@@ -1,0 +1,94 @@
+/* move content down */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #f5f5f5;
+}
+
+#tris-title {
+    text-align: center;
+    /*font-family: 'Montserrat', sans-serif;*/
+    font-family: 'Oswald', sans-serif;
+    /*font-family: 'Cabin', sans-serif;*/
+    font-size: 100px;
+}
+
+#tris-timer {
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+}
+
+footer {
+    padding-top: 20px;
+    text-align: center;
+}
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.tris-grid {
+    /*float: left;*/
+    margin-right: auto;
+    margin-left: auto;
+    height: 610px;
+    width: 610px;
+    border-radius: 5px;
+    background-color: slategray;
+}
+
+.tris-tile {
+    height: 50px;
+    width: 50px;
+    background-color: #9bc9ed;
+    border-radius: 5px;
+    margin: 0 auto;
+    animation-duration: 0.5s;
+}
+
+.tris-grid table {
+    border-spacing: 10px;
+    border-collapse: separate;
+}
+
+.tris-grid td
+{
+    background-color: rgba(0, 0, 0, 0.22);
+    margin: 0;
+    border-radius: 5px;
+    height: 50px;
+    width: 50px;
+    padding: 0px;
+}
+
+/*.tris-indicator{
+    background-color: #7cdb7a;
+    border-radius: 2px;
+}
+
+#bottom, #top {
+    height: 20px;
+    width: 610px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#horiz-container {
+    width: 650px;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#left{
+    float: left;
+    height: 610px;
+    width: 20px;
+}
+
+#right {
+    float: right;
+    height: 610px;
+    width: 20px;
+}*/
