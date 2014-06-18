@@ -14,7 +14,37 @@ else if(testButton.attachEvent)
 //Variables
 var g;
 var GRID_SIZE = 10;
-var possible_pieces = new Array("t", "straight", "s", "sq");
+var possible_pieces = new Array("t", "straight", "s", "sq", "l");
+var l = [
+    [
+        0, 1, 0, 0,
+        0, 1, 0, 0,
+        0, 1, 1, 0,
+        0, 0, 0, 0
+    ],
+
+    [
+        0, 0, 0, 0,
+        1, 1, 1, 0,
+        1, 0, 0, 0,
+        0, 0, 0, 0
+    ],
+
+    [
+        0, 1, 1, 0,
+        0, 0, 1, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 0
+    ],
+
+    [
+        0, 0, 0, 0,
+        0, 0, 1, 0,
+        1, 1, 1, 0,
+        0, 0, 0, 0
+    ]
+];
+
 var s = [
     [
         0, 1, 1, 0,
@@ -197,6 +227,9 @@ function Piece(type){
         case "sq":
             this.color = "#4467B6";
             break;
+        case "l":
+            this.color = "black";
+            break;
     }
 }
 
@@ -241,6 +274,16 @@ Piece.prototype.generatePiece = function(row, col) {
 
         for(var i=0; i<sq[0].length; i++){
             if(sq[0][i]==1){
+                tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
+                tiles[count].generateTile();
+                count++;
+            }
+        }
+    }
+    else if(this.type == "l"){
+
+        for(var i=0; i<l[0].length; i++){
+            if(l[0][i]==1){
                 tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
                 tiles[count].generateTile();
                 count++;
@@ -394,8 +437,103 @@ Piece.prototype.moveDown = function(){
     }
 }
 
+Piece.prototype.canRotate = function(){
+    var tempOrientation = this.orientation;
+    var row, col;
+    var count = 0;
+    if(this.type == "straight"){
+        tempOrientation = (tempOrientation+1)%straight.length;
+        for(var i=0; i<straight[tempOrientation].length; i++){
+            if(straight[tempOrientation][i]==1){
+                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
+                col = row.childNodes[this.col+(i%4)-1];
+                if(col.childNodes.length>0){
+                    var div = col.childNodes[0];
+                    if(div.getAttribute('id')=='occupied') {
+                        return false;
+                    }
+
+                }
+                count++;
+            }
+        }
+    }
+    else if(this.type == "t"){
+        tempOrientation = (tempOrientation+1)%t.length;
+        for(var i=0; i<t[tempOrientation].length; i++){
+            if(t[tempOrientation][i]==1){
+                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
+                col = row.childNodes[this.col+(i%4)-1];
+                if(col.childNodes.length>0){
+                    var div = col.childNodes[0];
+                    if(div.getAttribute('id')=='occupied') {
+                        return false;
+                    }
+
+                }
+                count++;
+            }
+        }
+    }
+    else if(this.type == "s"){
+        tempOrientation = (tempOrientation+1)%s.length;
+        for(var i=0; i<s[tempOrientation].length; i++){
+            if(s[tempOrientation][i]==1){
+                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
+                col = row.childNodes[this.col+(i%4)-1];
+                if(col.childNodes.length>0){
+                    var div = col.childNodes[0];
+                    if(div.getAttribute('id')=='occupied') {
+                        return false;
+                    }
+
+                }
+                count++;
+            }
+        }
+    }
+    else if(this.type == "sq"){
+        tempOrientation = (tempOrientation+1)%sq.length;
+        for(var i=0; i<sq[tempOrientation].length; i++){
+            if(sq[tempOrientation][i]==1){
+                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
+                col = row.childNodes[this.col+(i%4)-1];
+                if(col.childNodes.length>0){
+                    var div = col.childNodes[0];
+                    if(div.getAttribute('id')=='occupied') {
+                        return false;
+                    }
+
+                }
+                count++;
+            }
+        }
+    }
+    else if(this.type == "l"){
+        tempOrientation = (tempOrientation+1)%l.length;
+        for(var i=0; i<l[tempOrientation].length; i++){
+            if(l[tempOrientation][i]==1){
+                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
+                col = row.childNodes[this.col+(i%4)-1];
+                if(col.childNodes.length>0){
+                    var div = col.childNodes[0];
+                    if(div.getAttribute('id')=='occupied') {
+                        return false;
+                    }
+
+                }
+                count++;
+            }
+        }
+    }
+    return true;
+}
+
 Piece.prototype.rotate = function(){
     var count = 0;
+    if(!this.canRotate()){
+        return;
+    }
     if(this.type == "straight"){
         this.orientation = (this.orientation+1)%straight.length;
         for(var i=0; i<straight[this.orientation].length; i++){
@@ -437,6 +575,18 @@ Piece.prototype.rotate = function(){
         this.orientation = (this.orientation+1)%sq.length;
         for(var i=0; i<sq[this.orientation].length; i++){
             if(sq[this.orientation][i]==1){
+                var parent = this.tiles[count].parent;
+                parent.removeChild(parent.childNodes[0]);
+                this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
+                this.tiles[count].generateTile();
+                count++;
+            }
+        }
+    }
+    else if(this.type == "l"){
+        this.orientation = (this.orientation+1)%l.length;
+        for(var i=0; i<l[this.orientation].length; i++){
+            if(l[this.orientation][i]==1){
                 var parent = this.tiles[count].parent;
                 parent.removeChild(parent.childNodes[0]);
                 this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
