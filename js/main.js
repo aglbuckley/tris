@@ -140,7 +140,7 @@ function Game(starterPiece){
     this.pieces = new Array();
     this.currentPiece = starterPiece;
     this.time = 30;
-    this.currentPiece.generatePiece(2,2);
+    this.currentPiece.generatePiece(1,4);
 
     /*setInterval(function(){
         var timer = document.getElementById('tris-timer');
@@ -157,7 +157,7 @@ function Game(starterPiece){
 Game.prototype.generateNewPiece = function(){
     var piece = new Piece(possible_pieces[Math.floor(Math.random()*possible_pieces.length)]);
     this.currentPiece = piece;
-    this.currentPiece.generatePiece(2,2);
+    this.currentPiece.generatePiece(1,4);
 }
 
 Game.prototype.snapCurrentPiece = function(direction){
