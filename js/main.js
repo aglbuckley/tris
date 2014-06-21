@@ -14,7 +14,6 @@ else if(testButton.attachEvent)
 //Variables
 var g;
 var GRID_SIZE = 10;
-var possible_pieces = new Array("t", "straight", "s", "sq", "l");
 var l = [
     [
         0, 1, 0, 0,
@@ -112,6 +111,10 @@ var sq = [
         0, 0, 0, 0
     ]
 ];
+
+var possible_pieces = new Array("t", "straight", "s", "sq", "l");
+
+var pieces = {"t":t, "straight":straight, "s":s, "sq":sq, "l":l};
 
 $(document).ready(function() {
     var elements = document.getElementsByClassName("tris-grid");
@@ -239,57 +242,23 @@ Piece.prototype.generatePiece = function(row, col) {
     this.orientation = 0;
     var tiles = [];
     var count = 0;
-    if(this.type == "straight"){
+    var p = pieces[this.type];
 
-        for(var i=0; i<straight[0].length; i++){
-            if(straight[0][i]==1){
-                tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
-                tiles[count].generateTile();
-                count++;
-            }
-        }
-
-    }
-    else if(this.type == "t"){
-
-        for(var i=0; i<t[0].length; i++){
-            if(t[0][i]==1){
-                tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
-                tiles[count].generateTile();
-                count++;
-            }
+    //first check if the piece can be placed there
+    for(var i=0; i<p[0].length; i++){
+        if(p[0][i]==1 && (document.getElementById('row'+(row+Math.floor(i/4))).children[col+(i%4)-1].children.length>0 && document.getElementById('row'+(row+Math.floor(i/4))).children[col+(i%4)-1].children[0].getAttribute('id')=='occupied')){
+            return;
         }
     }
-    else if(this.type == "s"){
 
-        for(var i=0; i<s[0].length; i++){
-            if(s[0][i]==1){
-                tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
-                tiles[count].generateTile();
-                count++;
-            }
+    for(var i=0; i<p[0].length; i++){
+        if(p[0][i]==1){
+            tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
+            tiles[count].generateTile();
+            count++;
         }
     }
-    else if(this.type == "sq"){
 
-        for(var i=0; i<sq[0].length; i++){
-            if(sq[0][i]==1){
-                tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
-                tiles[count].generateTile();
-                count++;
-            }
-        }
-    }
-    else if(this.type == "l"){
-
-        for(var i=0; i<l[0].length; i++){
-            if(l[0][i]==1){
-                tiles[count] = new Tile(this.color, row+Math.floor(i/4), col+(i%4));
-                tiles[count].generateTile();
-                count++;
-            }
-        }
-    }
     this.tiles = tiles;
 }
 
@@ -441,89 +410,22 @@ Piece.prototype.canRotate = function(){
     var tempOrientation = this.orientation;
     var row, col;
     var count = 0;
-    if(this.type == "straight"){
-        tempOrientation = (tempOrientation+1)%straight.length;
-        for(var i=0; i<straight[tempOrientation].length; i++){
-            if(straight[tempOrientation][i]==1){
-                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
-                col = row.childNodes[this.col+(i%4)-1];
-                if(col.childNodes.length>0){
-                    var div = col.childNodes[0];
-                    if(div.getAttribute('id')=='occupied') {
-                        return false;
-                    }
 
-                }
-                count++;
-            }
-        }
-    }
-    else if(this.type == "t"){
-        tempOrientation = (tempOrientation+1)%t.length;
-        for(var i=0; i<t[tempOrientation].length; i++){
-            if(t[tempOrientation][i]==1){
-                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
-                col = row.childNodes[this.col+(i%4)-1];
-                if(col.childNodes.length>0){
-                    var div = col.childNodes[0];
-                    if(div.getAttribute('id')=='occupied') {
-                        return false;
-                    }
+    var p = pieces[this.type];
 
+    tempOrientation = (tempOrientation+1)%p.length;
+    for(var i=0; i<p[tempOrientation].length; i++){
+        if(p[tempOrientation][i]==1){
+            row = document.getElementById("row"+(this.row+Math.floor(i/4)));
+            col = row.childNodes[this.col+(i%4)-1];
+            if(col.childNodes.length>0){
+                var div = col.childNodes[0];
+                if(div.getAttribute('id')=='occupied') {
+                    return false;
                 }
-                count++;
-            }
-        }
-    }
-    else if(this.type == "s"){
-        tempOrientation = (tempOrientation+1)%s.length;
-        for(var i=0; i<s[tempOrientation].length; i++){
-            if(s[tempOrientation][i]==1){
-                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
-                col = row.childNodes[this.col+(i%4)-1];
-                if(col.childNodes.length>0){
-                    var div = col.childNodes[0];
-                    if(div.getAttribute('id')=='occupied') {
-                        return false;
-                    }
 
-                }
-                count++;
             }
-        }
-    }
-    else if(this.type == "sq"){
-        tempOrientation = (tempOrientation+1)%sq.length;
-        for(var i=0; i<sq[tempOrientation].length; i++){
-            if(sq[tempOrientation][i]==1){
-                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
-                col = row.childNodes[this.col+(i%4)-1];
-                if(col.childNodes.length>0){
-                    var div = col.childNodes[0];
-                    if(div.getAttribute('id')=='occupied') {
-                        return false;
-                    }
-
-                }
-                count++;
-            }
-        }
-    }
-    else if(this.type == "l"){
-        tempOrientation = (tempOrientation+1)%l.length;
-        for(var i=0; i<l[tempOrientation].length; i++){
-            if(l[tempOrientation][i]==1){
-                row = document.getElementById("row"+(this.row+Math.floor(i/4)));
-                col = row.childNodes[this.col+(i%4)-1];
-                if(col.childNodes.length>0){
-                    var div = col.childNodes[0];
-                    if(div.getAttribute('id')=='occupied') {
-                        return false;
-                    }
-
-                }
-                count++;
-            }
+            count++;
         }
     }
     return true;
@@ -531,68 +433,20 @@ Piece.prototype.canRotate = function(){
 
 Piece.prototype.rotate = function(){
     var count = 0;
+
+    var p = pieces[this.type];
     if(!this.canRotate()){
         return;
     }
-    if(this.type == "straight"){
-        this.orientation = (this.orientation+1)%straight.length;
-        for(var i=0; i<straight[this.orientation].length; i++){
-            if(straight[this.orientation][i]==1){
-                var parent = this.tiles[count].parent;
-                parent.removeChild(parent.childNodes[0]);
-                this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
-                this.tiles[count].generateTile();
-                count++;
-            }
-        }
 
-    }
-    else if(this.type == "t"){
-        this.orientation = (this.orientation+1)%t.length;
-        for(var i=0; i<t[this.orientation].length; i++){
-            if(t[this.orientation][i]==1){
-                var parent = this.tiles[count].parent;
-                parent.removeChild(parent.childNodes[0]);
-                this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
-                this.tiles[count].generateTile();
-                count++;
-            }
-        }
-    }
-    else if(this.type == "s"){
-        this.orientation = (this.orientation+1)%s.length;
-        for(var i=0; i<s[this.orientation].length; i++){
-            if(s[this.orientation][i]==1){
-                var parent = this.tiles[count].parent;
-                parent.removeChild(parent.childNodes[0]);
-                this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
-                this.tiles[count].generateTile();
-                count++;
-            }
-        }
-    }
-    else if(this.type == "sq"){
-        this.orientation = (this.orientation+1)%sq.length;
-        for(var i=0; i<sq[this.orientation].length; i++){
-            if(sq[this.orientation][i]==1){
-                var parent = this.tiles[count].parent;
-                parent.removeChild(parent.childNodes[0]);
-                this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
-                this.tiles[count].generateTile();
-                count++;
-            }
-        }
-    }
-    else if(this.type == "l"){
-        this.orientation = (this.orientation+1)%l.length;
-        for(var i=0; i<l[this.orientation].length; i++){
-            if(l[this.orientation][i]==1){
-                var parent = this.tiles[count].parent;
-                parent.removeChild(parent.childNodes[0]);
-                this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
-                this.tiles[count].generateTile();
-                count++;
-            }
+    this.orientation = (this.orientation+1)%p.length;
+    for(var i=0; i<p[this.orientation].length; i++){
+        if(p[this.orientation][i]==1){
+            var parent = this.tiles[count].parent;
+            parent.removeChild(parent.childNodes[0]);
+            this.tiles[count] = new Tile(this.color, this.row+Math.floor(i/4), this.col+(i%4));
+            this.tiles[count].generateTile();
+            count++;
         }
     }
 }
